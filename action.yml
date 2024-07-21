@@ -389,7 +389,7 @@ runs:
              fi
          fi
          echo "::endgroup::"
-
+         tree $HOMES/ -I 'kernel*|android-ndk*|bin|lib'
          unset USE_CCACHE CLANG_TRIPLE COMPILE_ARM32 CROSS_COMPILE CLANG_PATH SUBLEVEL KVER
          mkdir -p -v $HOMES/build
          if [ ! -z ${{ inputs.anykernel3-url }} ]; then
