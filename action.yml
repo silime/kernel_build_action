@@ -418,7 +418,7 @@ runs:
             rm -rf boot.img
             mkdir -p -v ../../../build
             mv *.img ../../../build/boot.img -v
-            echo "FILE_PATH=$(pwd ../../../build)" > $GITHUB_ENV 
+            echo "FILE_PATH=$(realpath ../../../build)" > $GITHUB_ENV 
             cd ..
             echo "::endgroup::"
          else
@@ -448,7 +448,7 @@ runs:
             else
                 zip Anykernel3-flasher.zip AnyKernel3/*
                 mv Anykernel3-flasher.zip ../../build -v
-                echo "FILE_PATH=$(pwd ../../build)" > $GITHUB_ENV 
+                echo "FILE_PATH=$(realpath ../../build)" > $GITHUB_ENV 
             fi
             echo ":: ${{env.FILE_PATH}}::"
             echo "::endgroup::"
