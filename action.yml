@@ -391,7 +391,7 @@ runs:
          echo "::endgroup::"
 
          unset USE_CCACHE CLANG_TRIPLE COMPILE_ARM32 CROSS_COMPILE CLANG_PATH SUBLEVEL KVER
-
+         mkdir -p -v $HOMES/build
          if [ ! -z ${{ inputs.anykernel3-url }} ]; then
             echo "::group:: Preparing to Upload boot.img"
             mkdir split
@@ -416,11 +416,10 @@ runs:
             fi
             ./magiskboot repack boot.img
             rm -rf boot.img
-            mkdir -p -v $HOMES/build
             mv *.img $HOMES/build/boot.img -v
             cd ..
             echo "::endgroup::"
-         else
+         
             echo "::group:: Packaging Anykernel3 flasher"
             if [ ! -z ${{ inputs.anykernel3-url }} ]; then
                 git clone ${{ inputs.anykernel3-url }} AnyKernel3
