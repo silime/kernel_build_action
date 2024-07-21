@@ -450,6 +450,7 @@ runs:
                 mv Anykernel3-flasher.zip ../../build -v
                 echo "FILE_PATH=$(pwd ../../build)" > $GITHUB_ENV 
             fi
+            echo ":: ${{env.FILE_PATH}}::"
             echo "::endgroup::"
          fi
 
