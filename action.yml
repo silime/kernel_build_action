@@ -264,18 +264,18 @@ runs:
          fi
 
          echo "::group:: Pulling Kernel Source"
-         git clone --recursive ${{ inputs.kernel-url }} -b "${{ inputs.kernel-branch }}" --depth=${{ inputs.depth }} kernel/${{ inputs.kernel-dir }}
+         git clone --recursive ${{ inputs.kernel-url }} -b "${{ inputs.kernel-branch }}" --depth=${{ inputs.depth }} $HOMES/kernel/${{ inputs.kernel-dir }}
          echo "::endgroup::"
 
          if [ ! -z  "${{ inputs.vendor-url }}" ]; then
              echo "::group:: Pulling Kernel vendor source"
              git clone ${{ inputs.vendor-url }} --depth=${{ inputs.depth }} kernel/${{ inputs.vendor-dir }} -b ${{ inputs.vendor-branch }}
-             test -d kernel/${{ inputs.vendor-dir }}/vendor && cp -rv kernel/${{ inputs.vendor-dir }}/vendor kernel
-             test -d kernel/${{ inputs.vendor-dir }}/vendor && cp -rv kernel/${{ inputs.vendor-dir }}/vendor ./
+             test -d $HOMES/kernel/${{ inputs.vendor-dir }}/vendor && cp -rv $HOMES/kernel/${{ inputs.vendor-dir }}/vendor kernel
+             test -d $HOMES/kernel/${{ inputs.vendor-dir }}/vendor && cp -rv $HOMES/kernel/${{ inputs.vendor-dir }}/vendor ./
              echo "::endgroup::"
          fi
 
-         cd kernel/${{ inputs.kernel-dir }}
+         cd $HOMES/kernel/${{ inputs.kernel-dir }}
          export SUBLEVEL=$(cat Makefile | grep "PATCHLEVEL =" | awk '{print $3}')
          function version_gt() { test "$(echo -e "$1\n$2" | sort -V | tail -n1)" == "$1"; }
 
@@ -390,9 +390,9 @@ runs:
          fi
          echo "::endgroup::"
 
-         unset USE_CCACHE CLANG_TRIPLE COMPILE_ARM32 CROSS_COMPILE CLANG_PATH HOMES SUBLEVEL KVER
+         unset USE_CCACHE CLANG_TRIPLE COMPILE_ARM32 CROSS_COMPILE CLANG_PATH SUBLEVEL KVER
 
-         if [ ${{ inputs.anykernel3 }} = false ]; then
+         if [ ! -z ${{ inputs.anykernel3-url }} ]; then
             echo "::group:: Preparing to Upload boot.img"
             mkdir split
             cd split
@@ -416,8 +416,8 @@ runs:
             fi
             ./magiskboot repack boot.img
             rm -rf boot.img
-            mkdir -p -v ../../../build
-            mv *.img ../../../build/boot.img -v
+            mkdir -p -v $HOMES/build
+            mv *.img $HOMES/build/boot.img -v
             cd ..
             echo "::endgroup::"
          else
@@ -443,26 +443,29 @@ runs:
 
             rm -rf -v AnyKernel3/.git* AnyKernel3/README.md
             if [ ${{ inputs.release }} = false ]; then
-                cp AnyKernel3 ../../build -r -v
+                cp AnyKernel3 $HOMES/build -r -v
             else
                 zip Anykernel3-flasher.zip AnyKernel3/*
-                mv Anykernel3-flasher.zip ../../build -v
+                mv Anykernel3-flasher.zip $HOMES/build -v
             fi
             echo "::endgroup::"
-            tree ../../../
+            tree $HOMES/build
          fi
 
     - id: uploadi
-      if: ${{ inputs.release == 'false' && inputs.anykernel3 == 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: kernel-built-bootimg
         path: build/*
         if-no-files-found: error
         overwrite: true
+       
+    - id: time
+      uses: boredland/get-time-action@2.0.0
+      with:
+        format: 'YYYYMMDD'
 
     - id: uploada
-      if: ${{ inputs.release == 'false' && inputs.anykernel3 == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: Anykernel3-flasher
@@ -476,8 +479,8 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.access-token }}
       with:
-        name: Last CI build kernel
-        tag_name: last-ci
+        name: Dev-Release ${{ steps.time.outputs.time }}
+        tag_name: ${{ steps.time.outputs.time }} 
         files: build/*
         make_latest: true
 
