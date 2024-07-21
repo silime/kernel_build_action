@@ -362,7 +362,7 @@ runs:
          fi
 
          echo "::group:: Building Kernel with selected cross compiler"
-         mkdir out -p -v
+         mkdir out/arch/${{ inputs.arch }}/boot/ -p -v
          touch out/arch/${{ inputs.arch }}/boot/Image
          if [ ${{ inputs.android-ndk }} = true ]; then
              export CLANG_PATH=$HOME/android-ndk-${{ inputs.android-ndk-version }}/toolchains/llvm/prebuilt/linux-x86_64
