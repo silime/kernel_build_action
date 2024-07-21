@@ -418,6 +418,7 @@ runs:
             rm -rf boot.img
             mkdir -p -v ../../../build
             mv *.img ../../../build/boot.img -v
+            echo "FILE_PATH=$(pwd ../../../build)" > $GITHUB_ENV 
             cd ..
             echo "::endgroup::"
          else
@@ -451,21 +452,26 @@ runs:
             echo "::endgroup::"
          fi
 
+    - id: time
+      uses: boredland/get-time-action@2.0.0
+      with:
+        format: 'YYYYMMDD'
+
     - id: uploadi
-      if: ${{ inputs.release == 'false' && inputs.anykernel3 == 'false' }}
+      # if: ${{ inputs.release == 'false' && inputs.anykernel3 == 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: kernel-built-bootimg
-        path: build/*
+        path: ${{ env.FILE_PATH }}/*/*
         if-no-files-found: error
         overwrite: true
 
     - id: uploada
-      if: ${{ inputs.release == 'false' && inputs.anykernel3 == 'true' }}
+      # if: ${{ inputs.release == 'false' && inputs.anykernel3 == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: Anykernel3-flasher
-        path: build/*
+        path: ${{ env.FILE_PATH }}/*
         if-no-files-found: error
         overwrite: true
 
@@ -475,9 +481,9 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.access-token }}
       with:
-        name: Last CI build kernel
-        tag_name: last-ci
-        files: build/*
+        name: Dev-Release ${{ steps.time.outputs.time }}
+        tag_name: ${{ steps.time.outputs.time }} 
+        files: ${{ env.FILE_PATH }}/*/*
         make_latest: true
 
 posts:
