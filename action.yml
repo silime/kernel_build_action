@@ -264,18 +264,18 @@ runs:
          fi
 
          echo "::group:: Pulling Kernel Source"
-         git clone --recursive ${{ inputs.kernel-url }} -b "${{ inputs.kernel-branch }}" --depth=${{ inputs.depth }} $HOMES/kernel/${{ inputs.kernel-dir }}
+         git clone --recursive ${{ inputs.kernel-url }} -b "${{ inputs.kernel-branch }}" --depth=${{ inputs.depth }} kernel/${{ inputs.kernel-dir }}
          echo "::endgroup::"
 
          if [ ! -z  "${{ inputs.vendor-url }}" ]; then
              echo "::group:: Pulling Kernel vendor source"
              git clone ${{ inputs.vendor-url }} --depth=${{ inputs.depth }} kernel/${{ inputs.vendor-dir }} -b ${{ inputs.vendor-branch }}
-             test -d $HOMES/kernel/${{ inputs.vendor-dir }}/vendor && cp -rv $HOMES/kernel/${{ inputs.vendor-dir }}/vendor kernel
-             test -d $HOMES/kernel/${{ inputs.vendor-dir }}/vendor && cp -rv $HOMES/kernel/${{ inputs.vendor-dir }}/vendor ./
+             test -d kernel/${{ inputs.vendor-dir }}/vendor && cp -rv kernel/${{ inputs.vendor-dir }}/vendor kernel
+             test -d kernel/${{ inputs.vendor-dir }}/vendor && cp -rv kernel/${{ inputs.vendor-dir }}/vendor ./
              echo "::endgroup::"
          fi
 
-         cd $HOMES/kernel/${{ inputs.kernel-dir }}
+         cd kernel/${{ inputs.kernel-dir }}
          export SUBLEVEL=$(cat Makefile | grep "PATCHLEVEL =" | awk '{print $3}')
          function version_gt() { test "$(echo -e "$1\n$2" | sort -V | tail -n1)" == "$1"; }
 
@@ -449,7 +449,7 @@ runs:
                 mv Anykernel3-flasher.zip $HOMES/build -v
             fi
             echo "::endgroup::"
-            tree $HOMES/build
+            tree $HOMES/ -I 'kernel*|android-ndk*|bin|lib'
          fi
 
     - id: uploadi
