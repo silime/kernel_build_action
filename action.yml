@@ -448,8 +448,8 @@ runs:
             else
                 zip Anykernel3-flasher.zip AnyKernel3/*
                 mv Anykernel3-flasher.zip ../../build -v
-                echo "FILE_PATH=$(realpath ../../build)" > $GITHUB_ENV 
             fi
+            echo "FILE_PATH=$(realpath ../../build)" > $GITHUB_ENV 
             echo ":: ${{env.FILE_PATH}}::"
             echo "::endgroup::"
          fi
