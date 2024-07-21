@@ -463,7 +463,7 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: kernel-built-bootimg
-        path: ${{ env.FILE_PATH }}/*/*
+        path: ${{ env.FILE_PATH }}/*
         if-no-files-found: error
         overwrite: true
 
@@ -484,7 +484,7 @@ runs:
       with:
         name: Dev-Release ${{ steps.time.outputs.time }}
         tag_name: ${{ steps.time.outputs.time }} 
-        files: ${{ env.FILE_PATH }}/*/*
+        files: ${{ env.FILE_PATH }}/*
         make_latest: true
 
 posts:
