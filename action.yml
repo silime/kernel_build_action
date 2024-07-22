@@ -399,8 +399,8 @@ runs:
             cd split
             export HOST_ARCH=$(dpkg --print-architecture)
             case ${HOST_ARCH} in
-                armv7* | armv8l | arm64 | armhf | arm) aria2c https://github.com/Shubhamvis98/AIK/raw/4ac321dfd48e16344e6146c505708aa720ff0bb3/bin/magiskboot_arm -o magiskboot && chmod 755 magiskboot ;;
-                i*86 | x86 | amd64 | x86_64) aria2c https://github.com/Shubhamvis98/AIK/raw/4ac321dfd48e16344e6146c505708aa720ff0bb3/bin/magiskboot_x86 -o magiskboot && chmod 755 magiskboot  ;;
+                armv7* | armv8l | arm64 | armhf | arm) aria2c https://github.com/Shubhamvis98/AIK/raw/4ac321dfd48e16344e6146c505708aa720ff0bb3/bin/magiskboot_arm -O magiskboot && chmod 755 magiskboot ;;
+                i*86 | x86 | amd64 | x86_64) aria2c https://github.com/Shubhamvis98/AIK/raw/4ac321dfd48e16344e6146c505708aa720ff0bb3/bin/magiskboot_x86 -O magiskboot && chmod 755 magiskboot  ;;
                 *) echo "Unknow cpu architecture for this device !" && exit 1 ;;
             esac
             aria2c ${{ inputs.bootimg-url }} -o boot.img
