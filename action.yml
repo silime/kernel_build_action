@@ -392,7 +392,8 @@ runs:
 
          unset USE_CCACHE CLANG_TRIPLE COMPILE_ARM32 CROSS_COMPILE CLANG_PATH HOMES SUBLEVEL KVER
          mkdir -p -v ../../build
-         if [ ${{ inputs.anykernel3 }} = false ]; then
+         find out/ -name "*.ko" -exec tar -czvf ../../build/module_ko.tar.gz {} +
+         if [ ! -z ${{ inputs.bootimg-url }}  ]; then
             echo "::group:: Preparing to Upload boot.img"
             mkdir split
             cd split
@@ -420,7 +421,8 @@ runs:
             echo "FILE_PATH=$(realpath ../../../build)" > $GITHUB_ENV 
             cd ..
             echo "::endgroup::"
-         else
+         fi
+         if [ inputs.anykernel3 == 'true' ]; then
             echo "::group:: Packaging Anykernel3 flasher"
             if [ ! -z ${{ inputs.anykernel3-url }} ]; then
                 git clone ${{ inputs.anykernel3-url }} AnyKernel3
