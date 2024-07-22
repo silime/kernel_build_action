@@ -404,7 +404,7 @@ runs:
                 *) echo "Unknow cpu architecture for this device !" && exit 1 ;;
             esac
             wget ${{ inputs.bootimg-url }} -O boot.img
-            nohup ./magiskboot unpack boot.img
+            nohup ./magiskboot unpack boot.img > nohup.out 2> nohup.err < /dev/null
             export FMT=$(cat nohup.out | grep "KERNEL_FMT" | awk '{gsub("\\[", "", $2); gsub("\\]", "", $2); print $2}')
             if [ "$FMT" = "raw" ] ; then
                 cp -v ../out/arch/${{ inputs.arch }}/boot/Image kernel
